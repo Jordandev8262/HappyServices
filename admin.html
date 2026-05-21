@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Happy Services — Admin</title>
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Main CSS (site tokens) -->
+  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="assets/css/admin.css" rel="stylesheet">
+</head>
+
+<body class="hs-admin">
+  <a class="hs-skip-link" href="#dashboardMain">Aller au contenu</a>
+  <main class="hs-admin-shell">
+    <!-- Login -->
+    <section id="loginView" class="hs-login">
+      <div class="hs-login-card">
+        <div class="hs-login-left">
+          <div class="hs-login-brand">
+            <div class="hs-badge">ADMIN</div>
+            <div class="hs-brand">
+              <div class="hs-brand-title"><span class="brand-accent">Happy</span> Services</div>
+              <div class="hs-brand-sub">Tableau de bord</div>
+            </div>
+          </div>
+
+          <div class="hs-login-copy">
+            <h1>Connexion administrateur</h1>
+            <p>Gère les articles du blog et consulte les demandes de contact, dans une interface moderne et rapide.</p>
+            <div class="hs-login-features">
+              <div class="hs-feature"><i class="bi bi-newspaper"></i> Blog</div>
+              <div class="hs-feature"><i class="bi bi-inbox"></i> Messages</div>
+              <div class="hs-feature"><i class="bi bi-shield-check"></i> Session</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hs-login-right">
+          <div class="hs-login-formwrap">
+            <div class="hs-login-top">
+              <div class="hs-login-title">Se connecter</div>
+              <div class="hs-login-muted">Saisis ton compte administrateur.</div>
+            </div>
+
+            <form id="loginForm" class="hs-form" autocomplete="off">
+              <div class="mb-3">
+                <label class="form-label" for="loginEmail">Email</label>
+                <div class="hs-input">
+                  <i class="bi bi-envelope"></i>
+                  <input id="loginEmail" class="form-control" type="email" placeholder="happyservices@admin" required>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label" for="loginPassword">Mot de passe</label>
+                <div class="hs-input">
+                  <i class="bi bi-lock"></i>
+                  <input id="loginPassword" class="form-control" type="password" placeholder="••••••••••" required>
+                  <button class="hs-eye" type="button" id="togglePwd" aria-label="Afficher / masquer le mot de passe">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="hs-login-row">
+                <label class="hs-check">
+                  <input id="rememberMe" type="checkbox">
+                  <span>Rester connecté</span>
+                </label>
+                <a class="hs-link" href="index.html">Retour au site</a>
+              </div>
+
+              <div id="loginError" class="hs-alert" role="alert" aria-live="polite"></div>
+
+              <button class="btn btn-primary w-100 hs-btn" type="submit">
+                Accéder au tableau de bord <i class="bi bi-arrow-right"></i>
+              </button>
+
+              <div class="hs-login-foot">
+                <span class="hs-login-foot-muted">Accès réservé à l’équipe Happy Services.</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboardView" class="hs-dashboard d-none">
+      <header class="hs-topbar">
+        <div class="hs-topbar-left">
+          <a class="hs-topbar-brand" href="index.html" title="Retour au site public">
+            <span class="hs-dot"></span>
+            <span><span class="brand-accent">Happy</span> Services</span>
+          </a>
+          <div class="hs-topbar-sep" aria-hidden="true"></div>
+          <div class="hs-topbar-text">
+            <div class="hs-topbar-kicker">Espace administrateur</div>
+            <div class="hs-topbar-title" id="viewTitle">Tableau de bord</div>
+          </div>
+        </div>
+
+        <div class="hs-topbar-right">
+          <span class="hs-env-pill" title="Données enregistrées dans ce navigateur uniquement">Stockage local</span>
+          <button class="btn btn-light hs-topbtn" id="seedDemo" type="button" title="Créer 3 articles démo">
+            <i class="bi bi-magic" aria-hidden="true"></i> Données démo
+          </button>
+          <a class="btn btn-outline-secondary hs-topbtn" href="index.html#blog">
+            <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Voir le blog
+          </a>
+          <button class="btn btn-outline-danger hs-topbtn" id="logoutBtn" type="button">
+            <i class="bi bi-box-arrow-right" aria-hidden="true"></i> Déconnexion
+          </button>
+        </div>
+      </header>
+
+      <div class="hs-body">
+        <aside class="hs-sidebar" aria-label="Navigation administration">
+          <div class="hs-sidebar-head">
+            <div class="hs-sidebar-logo" aria-hidden="true"><i class="bi bi-grid-1x2-fill"></i></div>
+            <div class="hs-sidebar-head-text">
+              <div class="hs-sidebar-app">Console</div>
+              <div class="hs-sidebar-version">v1 · static</div>
+            </div>
+          </div>
+
+          <nav class="hs-side-nav" aria-label="Sections principales">
+            <button type="button" class="hs-navitem active" data-view="blog" aria-current="page">
+              <span class="hs-navicon" aria-hidden="true"><i class="bi bi-newspaper"></i></span>
+              <span class="hs-navtext">
+                <span class="hs-navlabel">Blog</span>
+                <span class="hs-navhint">Articles &amp; brouillons</span>
+              </span>
+            </button>
+            <button type="button" class="hs-navitem" data-view="contacts" aria-current="false">
+              <span class="hs-navicon" aria-hidden="true"><i class="bi bi-inbox"></i></span>
+              <span class="hs-navtext">
+                <span class="hs-navlabel">Contacts</span>
+                <span class="hs-navhint">Demandes reçues</span>
+              </span>
+            </button>
+          </nav>
+
+          <div class="hs-navspacer" aria-hidden="true"></div>
+          <div class="hs-sidehint">
+            <div class="hs-sidehint-title"><i class="bi bi-info-circle" aria-hidden="true"></i> Rappel</div>
+            <div class="hs-sidehint-text">Les données restent sur cet appareil. Pense à exporter les contacts pour une sauvegarde.</div>
+          </div>
+        </aside>
+
+        <div class="hs-content-wrap">
+          <main class="hs-content" id="dashboardMain" tabindex="-1">
+            <div class="hs-page-shell">
+              <header class="hs-page-intro" aria-labelledby="pageHeading">
+                <nav class="hs-breadcrumb" aria-label="Fil d’Ariane">
+                  <ol class="hs-breadcrumb-list">
+                    <li><a href="index.html">Site</a></li>
+                    <li aria-hidden="true"><i class="bi bi-chevron-right"></i></li>
+                    <li><span>Administration</span></li>
+                    <li aria-hidden="true"><i class="bi bi-chevron-right"></i></li>
+                    <li><span id="breadcrumbCurrent">Blog</span></li>
+                  </ol>
+                </nav>
+                <div class="hs-page-intro-row">
+                  <div class="hs-page-intro-main">
+                    <h1 class="hs-page-title" id="pageHeading">Articles du blog</h1>
+                    <p class="hs-page-desc" id="pageDesc">Publie du contenu professionnel et garde une vision claire sur l’état de tes articles.</p>
+                  </div>
+                  <div class="hs-page-meta">
+                    <div class="hs-meta-date" id="todayLabel"></div>
+                    <div class="hs-meta-muted">Session locale</div>
+                  </div>
+                </div>
+              </header>
+
+              <!-- BLOG -->
+              <section id="blogPanel" class="hs-panel" aria-labelledby="blogPanelHeading">
+                <div class="hs-panel-head">
+                  <div>
+                    <h2 class="hs-panel-heading" id="blogPanelHeading">Liste des articles</h2>
+                    <p class="hs-panel-sub">Recherche, filtre et actions rapides sur chaque ligne.</p>
+                  </div>
+                  <button class="btn btn-primary hs-btn" id="newArticleBtn" type="button">
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i> Nouvel article
+                  </button>
+                </div>
+
+                <div class="hs-kpis" role="group" aria-label="Indicateurs blog">
+                  <div class="hs-kpi hs-kpi--accent">
+                    <span class="hs-kpi-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></span>
+                    <div class="hs-kpi-body">
+                      <div class="hs-kpi-label">Total articles</div>
+                      <div class="hs-kpi-value" id="kpiTotalArticles">0</div>
+                    </div>
+                  </div>
+                  <div class="hs-kpi">
+                    <span class="hs-kpi-icon" aria-hidden="true"><i class="bi bi-check2-all"></i></span>
+                    <div class="hs-kpi-body">
+                      <div class="hs-kpi-label">Publiés</div>
+                      <div class="hs-kpi-value" id="kpiPublishedArticles">0</div>
+                    </div>
+                  </div>
+                  <div class="hs-kpi">
+                    <span class="hs-kpi-icon" aria-hidden="true"><i class="bi bi-file-earmark"></i></span>
+                    <div class="hs-kpi-body">
+                      <div class="hs-kpi-label">Brouillons</div>
+                      <div class="hs-kpi-value" id="kpiDraftArticles">0</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hs-tablewrap">
+                  <div class="hs-tabletools">
+                    <div class="hs-search">
+                      <i class="bi bi-search" aria-hidden="true"></i>
+                      <input id="articleSearch" class="form-control" type="search" placeholder="Titre, catégorie, résumé…" aria-label="Rechercher un article" autocomplete="off">
+                    </div>
+                    <div class="hs-tabletools-right">
+                      <label class="hs-visually-hidden" for="articleFilter">Filtrer par statut</label>
+                      <select id="articleFilter" class="form-select hs-filter" title="Filtrer par statut">
+                        <option value="all" selected>Tous les statuts</option>
+                        <option value="published">Publiés uniquement</option>
+                        <option value="draft">Brouillons uniquement</option>
+                      </select>
+                      <span class="hs-result-count" id="articleResultCount" aria-live="polite"></span>
+                    </div>
+                  </div>
+
+                  <div class="table-responsive hs-table-responsive">
+                    <table class="table hs-table align-middle">
+                      <caption class="hs-visually-hidden">Articles du blog, colonnes titre, catégorie, statut, date et actions</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">Titre</th>
+                          <th scope="col">Catégorie</th>
+                          <th scope="col">Statut</th>
+                          <th scope="col">Date</th>
+                          <th scope="col" class="text-end">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="articlesTbody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+              <!-- CONTACTS -->
+              <section id="contactsPanel" class="hs-panel d-none" aria-labelledby="contactsPanelHeading">
+                <div class="hs-panel-head">
+                  <div>
+                    <h2 class="hs-panel-heading" id="contactsPanelHeading">Boîte de réception</h2>
+                    <p class="hs-panel-sub">Messages issus du formulaire — ouvre une ligne pour lire la demande complète.</p>
+                  </div>
+                  <div class="hs-panel-actions">
+                    <button class="btn btn-light hs-topbtn" id="exportContacts" type="button">
+                      <i class="bi bi-download" aria-hidden="true"></i> Export JSON
+                    </button>
+                    <button class="btn btn-outline-danger hs-topbtn" id="clearContacts" type="button">
+                      <i class="bi bi-trash" aria-hidden="true"></i> Vider
+                    </button>
+                  </div>
+                </div>
+
+                <div class="hs-kpis" role="group" aria-label="Indicateurs contacts">
+                  <div class="hs-kpi hs-kpi--accent">
+                    <span class="hs-kpi-icon" aria-hidden="true"><i class="bi bi-envelope-open"></i></span>
+                    <div class="hs-kpi-body">
+                      <div class="hs-kpi-label">Messages</div>
+                      <div class="hs-kpi-value" id="kpiContacts">0</div>
+                    </div>
+                  </div>
+                  <div class="hs-kpi">
+                    <span class="hs-kpi-icon" aria-hidden="true"><i class="bi bi-calendar-day"></i></span>
+                    <div class="hs-kpi-body">
+                      <div class="hs-kpi-label">Aujourd’hui</div>
+                      <div class="hs-kpi-value" id="kpiContactsToday">0</div>
+                    </div>
+                  </div>
+                  <div class="hs-kpi">
+                    <span class="hs-kpi-icon" aria-hidden="true"><i class="bi bi-graph-up-arrow"></i></span>
+                    <div class="hs-kpi-body">
+                      <div class="hs-kpi-label">7 derniers jours</div>
+                      <div class="hs-kpi-value" id="kpiContacts7d">0</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hs-tablewrap">
+                  <div class="hs-tabletools">
+                    <div class="hs-search">
+                      <i class="bi bi-search" aria-hidden="true"></i>
+                      <input id="contactSearch" class="form-control" type="search" placeholder="Nom, email, objet, message…" aria-label="Rechercher un message" autocomplete="off">
+                    </div>
+                    <span class="hs-result-count" id="contactResultCount" aria-live="polite"></span>
+                  </div>
+
+                  <div class="table-responsive hs-table-responsive">
+                    <table class="table hs-table align-middle">
+                      <caption class="hs-visually-hidden">Demandes de contact avec détail par ligne</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">Nom</th>
+                          <th scope="col">Email</th>
+                          <th scope="col">Type</th>
+                          <th scope="col">Reçu le</th>
+                          <th scope="col">Objet</th>
+                          <th scope="col" class="text-end">Voir</th>
+                        </tr>
+                      </thead>
+                      <tbody id="contactsTbody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </main>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Article Modal -->
+  <div class="modal fade" id="articleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content hs-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="articleModalTitle">Nouvel article</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          <form id="articleForm" class="row gy-3">
+            <input type="hidden" id="articleId">
+            <div class="col-md-8">
+              <label class="form-label" for="articleTitle">Titre</label>
+              <input id="articleTitle" class="form-control" type="text" placeholder="Ex. 10 idées d’animations premium" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="articleStatus">Statut</label>
+              <select id="articleStatus" class="form-select" required>
+                <option value="published">Publié</option>
+                <option value="draft">Brouillon</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="articleCategory">Catégorie</label>
+              <input id="articleCategory" class="form-control" type="text" placeholder="Organisation" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="articleDate">Date</label>
+              <input id="articleDate" class="form-control" type="date" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="articleImage">Image (chemin)</label>
+              <input id="articleImage" class="form-control" type="text" placeholder="assets/img/blog/mon-article.jpg" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="articleExcerpt">Résumé</label>
+              <textarea id="articleExcerpt" class="form-control" rows="3" placeholder="2–3 phrases max." required></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="articleContent">Contenu (optionnel)</label>
+              <textarea id="articleContent" class="form-control" rows="6" placeholder="Texte complet… (stocké localement)"></textarea>
+            </div>
+          </form>
+          <div class="hs-modal-hint">
+            Les articles sont affichés sur la page d’accueil via le stockage local du navigateur.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary" id="saveArticleBtn">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Details Modal -->
+  <div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content hs-modal">
+        <div class="modal-header">
+          <h5 class="modal-title">Message</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          <div class="hs-contact-details" id="contactDetails"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+
+</html>
+
