@@ -2198,6 +2198,73 @@ section,
   margin-bottom: 20px;
 }
 
+/*--------------------------------------------------------------
+# Footer - improved contrast & readability
+--------------------------------------------------------------*/
+.site-footer {
+  background: #ffffff;
+  color: #071427;
+  padding: 48px 0 28px;
+  border-top: 1px solid rgba(7,20,39,0.06);
+}
+.site-footer .footer-logo-img {
+  max-height: 56px;
+  width: auto;
+  margin-right: 12px;
+}
+.site-footer h5 {
+  color: #071427;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+.site-footer .footer-desc {
+  color: rgba(7,20,39,0.85);
+  margin-top: 6px;
+  line-height: 1.45;
+}
+.site-footer a { color: rgba(7,20,39,0.95); }
+.site-footer a:hover { color: #0b2340; text-decoration: none; }
+.site-footer .social-links { display: flex; gap: 8px; align-items: center; }
+.site-footer .social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  border-radius: 8px;
+  background: rgba(7,20,39,0.05);
+  color: #071427;
+  margin-right: 6px;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+.site-footer .social-icon:hover { transform: translateY(-2px); background: rgba(11,35,64,0.08); color: #071427; }
+.site-footer .social-icon svg { width: 14px; height: 14px; display: block; margin: 0 auto; }
+.site-footer .social-icon[aria-label="TikTok"] { padding: 6px; }
+.site-footer .footer-links ul li { margin-bottom: 8px; }
+.site-footer .footer-contact p { margin-bottom: 6px; color: rgba(7,20,39,0.95); }
+.site-footer .newsletter .form-control {
+  border-radius: 6px 0 0 6px;
+  border: 1px solid rgba(7,20,39,0.08);
+  background: #f8f9fb;
+  color: #071427;
+}
+.site-footer .newsletter .btn {
+  border-radius: 0 6px 6px 0;
+  background: #0b2340;
+  color: #ffffff;
+  border: none;
+}
+.site-footer .newsletter .btn:hover { background: #0a2a3f; }
+.site-footer .footer-bottom { border-color: rgba(7,20,39,0.06); }
+.site-footer .back-to-top { color: rgba(7,20,39,0.95); }
+.site-footer .back-to-top:hover { color: #0b2340; text-decoration: none; }
+
+@media (max-width: 767.98px) {
+  .site-footer { padding: 36px 0 20px; }
+  .site-footer .footer-bottom { text-align: center; gap: 8px; }
+}
+
 .service-details .services-list a {
   display: block;
   line-height: 1;
