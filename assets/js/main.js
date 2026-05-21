@@ -119,6 +119,39 @@
   }
 
   /**
+   * Hero slideshow
+   */
+  const heroSlideshow = document.querySelector('.hero-slideshow');
+  if (heroSlideshow) {
+    const heroImageList = heroSlideshow.getAttribute('data-hero-images');
+    if (heroImageList) {
+      const heroImages = heroImageList.split(',').map(src => src.trim()).filter(Boolean);
+      const slideImages = heroSlideshow.querySelectorAll('.hero-slideshow__item');
+      let currentSlide = 0;
+      let nextIndex = 1;
+
+      const preloadImage = (src) => {
+        const img = new Image();
+        img.src = src;
+      };
+      heroImages.forEach(preloadImage);
+
+      const updateSlide = () => {
+        if (heroImages.length < 2) return;
+        const incoming = slideImages[1 - currentSlide];
+        const outgoing = slideImages[currentSlide];
+        incoming.src = heroImages[nextIndex];
+        outgoing.classList.remove('active');
+        incoming.classList.add('active');
+        currentSlide = 1 - currentSlide;
+        nextIndex = (nextIndex + 1) % heroImages.length;
+      };
+
+      setInterval(updateSlide, 6000);
+    }
+  }
+
+  /**
    * Animate the skills items on reveal
    */
   let skillsAnimation = document.querySelectorAll('.skills-animation');

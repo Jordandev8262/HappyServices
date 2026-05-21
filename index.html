@@ -68,7 +68,10 @@
     <!-- Hero Section -->
     <section id="hero" class="hero hero--pro section light-background">
 
-      <img src="assets/img/hero-img.jpg" alt="" data-aos="fade-in">
+      <div class="hero-slideshow" data-hero-images="assets/img/hero-img.jpg,assets/img/services.jpg,assets/img/fete.jpg" data-aos="fade-in">
+        <img class="hero-slideshow__item active" src="assets/img/hero-img.jpg" alt="">
+        <img class="hero-slideshow__item" src="assets/img/services.jpg" alt="">
+      </div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
         <div class="hero-content">
@@ -96,18 +99,16 @@
     <!-- About Section -->
     <section id="about" class="about section">
 
-      <div class="container d-flex" data-aos="fade-up" data-aos-delay="100">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <div class="row gy-4">
-          <div class="col-md-6">
-
-            <div class="row justify-content-between gy-4">
-              <img src="assets/img/Happy Services.png" alt="">
-            </div>
+        <div class="row gy-4 align-items-center">
+          <div class="col-md-6 order-md-2 d-flex justify-content-md-end">
+            <div class="about-img">
+              <img src="assets/img/Happy Services.png" alt="Happy Services logo">
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 order-md-1">
             <div class="about-me">
               <h4>À propos de nous</h4>
               <p>
@@ -301,40 +302,51 @@
     <!-- Stats Section -->
     <section id="stats" class="stats section accent-background">
 
-      <img src="assets/img/stats-bg.jpg" alt="" data-aos="fade-in">
-
       <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
 
-        <div class="row gy-4">
+        <div class="container section-title" data-aos="fade-up" data-aos-delay="150">
+          <h2>Nos Partenaires</h2>
+        </div>
 
-          <div class="col-lg-3 col-md-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="0" class="purecounter">232</span>
-              <p>Clients</p>
+        <div class="partenaires partner-carousel">
+          <div class="partner-track">
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 1">
             </div>
-          </div><!-- End Stats Item -->
-
-          <div class="col-lg-3 col-md-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="0" class="purecounter">521</span>
-              <p>Projects</p>
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 2">
             </div>
-          </div><!-- End Stats Item -->
-
-          <div class="col-lg-3 col-md-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="0" class="purecounter">1453</span>
-              <p>Hours Of Support</p>
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 3">
             </div>
-          </div><!-- End Stats Item -->
-
-          <div class="col-lg-3 col-md-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="32" data-purecounter-duration="0" class="purecounter">32</span>
-              <p>Awards</p>
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 4">
             </div>
-          </div><!-- End Stats Item -->
-
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 5">
+            </div>
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 6">
+            </div>
+            <div class="partner-item">
+              <img src="assets/img/Happy Services.png" alt="Logo du partenaire 7">
+            </div>
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 8">
+            </div>
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 9">
+            </div>
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 10">
+            </div>
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 11">
+            </div>
+            <div class="partner-item">
+              <img src="assets/img/logo.png" alt="Logo du partenaire 12">
+            </div>
+          </div>
         </div>
 
       </div>
