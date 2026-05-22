@@ -488,7 +488,7 @@
     const q = els.contactSearch.value.trim().toLowerCase();
     const filtered = list.filter((c) => {
       if (!q) return true;
-      const hay = `${c.name ?? ""} ${c.email ?? ""} ${c.subject ?? ""} ${c.message ?? ""} ${c.event_type ?? ""}`.toLowerCase();
+      const hay = `${c.name ?? ""} ${c.phone ?? ""} ${c.subject ?? ""} ${c.message ?? ""} ${c.event_type ?? ""}`.toLowerCase();
       return hay.includes(q);
     });
 
@@ -527,7 +527,7 @@
       .slice(0, 500)
       .map((c) => {
         const name = escapeHtml(c.name);
-        const email = escapeHtml(c.email);
+        const phone = escapeHtml(c.phone);
         const type = escapeHtml(c.event_type || "—");
         const statusPill = buildContactStatusPill(c.status);
         const created = escapeHtml(fmtDate(c.createdAt));
@@ -535,7 +535,7 @@
         return `
           <tr>
             <td><span class="hs-cell-title">${name}</span></td>
-            <td><a href="mailto:${email}">${email}</a></td>
+            <td><a href="tel:${phone}">${phone}</a></td>
             <td>${type}</td>
             <td>${statusPill}</td>
             <td>${created}</td>
@@ -565,7 +565,7 @@
       <div class="hs-contact-box">
         <div class="hs-contact-title">${escapeHtml(c.subject || "Message")}</div>
         <div class="hs-contact-line"><span>Nom</span><span>${escapeHtml(c.name || "—")}</span></div>
-        <div class="hs-contact-line"><span>Email</span><span>${escapeHtml(c.email || "—")}</span></div>
+        <div class="hs-contact-line"><span>Téléphone</span><span>${escapeHtml(c.phone || "—")}</span></div>
         <div class="hs-contact-line"><span>Type</span><span>${escapeHtml(c.event_type || "—")}</span></div>
         <div class="hs-contact-line"><span>Date</span><span>${escapeHtml(c.event_date || "—")}</span></div>
         <div class="hs-contact-line"><span>Reçu le</span><span>${escapeHtml(fmtDate(c.createdAt))}</span></div>

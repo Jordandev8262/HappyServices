@@ -30,7 +30,7 @@ function doPost(e) {
 
     // Récupération des données pour l'ajout (par défaut)
     var name = e.parameter.name || "Non spécifié";
-    var email = e.parameter.email || "Non spécifié";
+    var phone = e.parameter.full_phone || e.parameter.phone || "Non spécifié";
     var event_type = e.parameter.event_type || "Non spécifié";
     var event_date = e.parameter.event_date || "Non spécifié";
     var subject = e.parameter.subject || "Sans objet";
@@ -41,7 +41,7 @@ function doPost(e) {
     sheet.appendRow([
       new Date(), 
       name, 
-      email, 
+      phone, 
       event_type, 
       event_date, 
       subject, 
@@ -54,7 +54,7 @@ function doPost(e) {
       MailApp.sendEmail({
         to: "happyservices@gmail.com",
         subject: "Nouveau contact : " + subject,
-        body: "Vous avez reçu une nouvelle demande.\n\nNom: " + name + "\nEmail: " + email + "\nType: " + event_type + "\nDate: " + event_date + "\nObjet: " + subject + "\nMessage: " + message
+        body: "Vous avez reçu une nouvelle demande.\n\nNom: " + name + "\nTéléphone: " + phone + "\nType: " + event_type + "\nDate: " + event_date + "\nObjet: " + subject + "\nMessage: " + message
       });
     } catch (e) {}
     
@@ -83,7 +83,7 @@ function doGet() {
         rowIndex: i + 1, // Pour pouvoir mettre à jour le statut plus tard
         createdAt: data[i][0],
         name: data[i][1],
-        email: data[i][2],
+        phone: data[i][2],
         event_type: data[i][3],
         event_date: data[i][4],
         subject: data[i][5],

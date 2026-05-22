@@ -39,7 +39,7 @@
           id: crypto?.randomUUID ? crypto.randomUUID() : `c_${Date.now()}_${Math.random().toString(16).slice(2)}`,
           createdAt: nowIso(),
           name: normalizeStr(fd.get("name")),
-          email: normalizeStr(fd.get("email")),
+          phone: normalizeStr(fd.get("full_phone") || fd.get("phone")),
           subject: normalizeStr(fd.get("subject")),
           message: normalizeStr(fd.get("message")),
           event_type: normalizeStr(fd.get("event_type")),

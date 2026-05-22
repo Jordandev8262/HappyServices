@@ -24,6 +24,9 @@
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
+  <!-- Intl-tel-input CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/css/intlTelInput.css">
+
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 
@@ -815,10 +818,10 @@
 
                   <div class="col-12">
                     <div class="info-item d-flex align-items-center">
-                      <i class="bi bi-envelope flex-shrink-0"></i>
+                      <i class="bi bi-whatsapp flex-shrink-0"></i>
                       <div>
-                        <h3>Email</h3>
-                        <p><a href="mailto:happyservices@gmail.com">happyservices@gmail.com</a></p>
+                        <h3>WhatsApp Direct</h3>
+                        <p><a href="https://wa.me/243894993800">+243 894 993 800</a></p>
                       </div>
                     </div>
                   </div>
@@ -835,7 +838,7 @@
 
           <div class="col-lg-7" data-aos="fade-up" data-aos-delay="300">
             <!-- Remplacez l'action par l'URL de votre déploiement Google Apps Script -->
-            <form action="https://script.google.com/macros/s/AKfycbxO5-yV6cBn6RZ2VHKme-SIOX2aB0WNGm_FabiDqMooZh1VXOqxP_18JPA4kuRQkRCsWw/exec" method="post" class="php-email-form contact-form">
+            <form action="https://script.google.com/macros/s/AKfycbwkQoa-SO8rIJ6daLm2lQyBnKkC0tCTdNJ8eHvve76N3-P4XhvIEQeRDPsIfz7voWiEZA/exec" method="post" class="php-email-form contact-form">
               <div class="row gy-4">
 
                 <div class="col-md-6">
@@ -844,8 +847,8 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label" for="contact-email">Email</label>
-                  <input id="contact-email" type="email" class="form-control" name="email" placeholder="ton@email.com" required>
+                  <label class="form-label" for="contact-phone">Téléphone</label>
+                  <input id="contact-phone" type="tel" class="form-control" name="phone" required>
                 </div>
 
                 <div class="col-md-6">
@@ -972,6 +975,34 @@
   <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Intl-tel-input JS -->
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/js/intlTelInput.min.js"></script>
+  <script>
+    const input = document.querySelector("#contact-phone");
+    if (input) {
+      const iti = window.intlTelInput(input, {
+        initialCountry: "cd", // Congo-Kinshasa
+        separateDialCode: true,
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/js/utils.js",
+      });
+      
+      // Store the full number in a hidden field or handle it on submit
+      const form = input.closest('form');
+      form.addEventListener('submit', function() {
+        const fullNumber = iti.getNumber();
+        // You could create a hidden input to send the full number
+        let hiddenInput = form.querySelector('input[name="full_phone"]');
+        if (!hiddenInput) {
+          hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = 'full_phone';
+          form.appendChild(hiddenInput);
+        }
+        hiddenInput.value = fullNumber;
+      });
+    }
+  </script>
 
   <!-- Happy Services runtime -->
   <script src="assets/js/blog-runtime.js"></script>
