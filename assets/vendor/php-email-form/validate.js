@@ -58,8 +58,14 @@
         if (this.readyState == 4) {
           thisForm.querySelector('.loading').classList.remove('d-block');
           // Avec no-cors/GAS on ne peut pas lire le statut exact, on considère que c'est OK si on a envoyé
-          thisForm.querySelector('.sent-message').classList.add('d-block');
+          let sentMessage = thisForm.querySelector('.sent-message');
+          sentMessage.classList.add('d-block');
           thisForm.reset();
+
+          // Faire disparaître le message après 5 secondes
+          setTimeout(() => {
+            sentMessage.classList.remove('d-block');
+          }, 5000);
         }
       };
       xhttp.send(new URLSearchParams(formData));
@@ -81,8 +87,14 @@
     .then(data => {
       thisForm.querySelector('.loading').classList.remove('d-block');
       if (data.trim() == 'OK') {
-        thisForm.querySelector('.sent-message').classList.add('d-block');
+        let sentMessage = thisForm.querySelector('.sent-message');
+        sentMessage.classList.add('d-block');
         thisForm.reset(); 
+
+        // Faire disparaître le message après 5 secondes
+        setTimeout(() => {
+          sentMessage.classList.remove('d-block');
+        }, 5000);
       } else {
         throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
       }
