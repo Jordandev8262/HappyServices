@@ -11,6 +11,11 @@
   const BLOG_KEY = "hs_blog_articles_v1";
   const CONTACTS_KEY = "hs_contacts_v1";
 
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxO5-yV6cBn6RZ2VHKme-SIOX2aB0WNGm_FabiDqMooZh1VXOqxP_18JPA4kuRQkRCsWw/exec";
+
+  let remoteContacts = [];
+  let isFetchingContacts = false;
+
   const els = {
     loginView: document.getElementById("loginView"),
     dashboardView: document.getElementById("dashboardView"),

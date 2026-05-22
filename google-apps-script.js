@@ -46,3 +46,39 @@ function doPost(e) {
     lock.releaseLock();
   }
 }
+
+function doGet() {
+  try {
+    var id = "1xKd_6ofZ5N2YtiwghLAgJQSO35cidHa80LFsQBjWhzw";
+    var ss = SpreadsheetApp.openById(id);
+    var sheet = ss.getSheets()[0];
+    var data = sheet.getDataRange().getValues();
+    
+    // On enlève l'en-tête si elle existe (ou on la gère)
+    // Ici on suppose que la première ligne peut être une en-tête ou des données
+    // Pour être sûr, on transforme en tableau d'objets
+    var results = [];
+    for (var i = 1; i < data.length; i++) {
+      results.push({
+        id: "gs_" + i + "_" + new Date(data[i][0]).getTime(),
+        createdAt: data[i][0],
+        name: data[i][1],
+        email: data[i][2],
+        event_type: data[i][3],
+        event_date: data[i][4],
+        subject: data[i][5],
+        message: data[i][6]
+      });
+    }
+    
+    // Inverser pour avoir les plus récents en premier
+    results.reverse();
+    
+    return ContentService.createTextOutput(JSON.stringify(results))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ error: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
