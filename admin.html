@@ -11,6 +11,7 @@
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
   <!-- Main CSS (site tokens) -->
+   <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/css/main.css" rel="stylesheet">
   <link href="assets/css/admin.css" rel="stylesheet">
 </head>
@@ -311,6 +312,7 @@
                           <th scope="col">Nom</th>
                           <th scope="col">Email</th>
                           <th scope="col">Type</th>
+                          <th scope="col">Statut</th>
                           <th scope="col">Reçu le</th>
                           <th scope="col">Objet</th>
                           <th scope="col" class="text-end">Voir</th>
@@ -359,8 +361,15 @@
               <input id="articleDate" class="form-control" type="date" required>
             </div>
             <div class="col-md-4">
-              <label class="form-label" for="articleImage">Image (chemin)</label>
-              <input id="articleImage" class="form-control" type="text" placeholder="assets/img/blog/mon-article.jpg" required>
+              <label class="form-label">Image</label>
+              <div class="hs-image-upload-wrapper">
+                <input id="articleImageFile" class="form-control" type="file" accept="image/*">
+                <input id="articleImage" type="hidden">
+                <div id="imagePreviewContainer" class="hs-image-preview mt-2" style="display: none;">
+                  <img id="imagePreview" src="" alt="Aperçu" style="max-width: 100px; height: auto; border-radius: 8px; border: 1px solid #ddd;">
+                  <button type="button" class="btn btn-sm btn-outline-danger ms-2" id="removeImageBtn">Supprimer</button>
+                </div>
+              </div>
             </div>
             <div class="col-12">
               <label class="form-label" for="articleExcerpt">Résumé</label>
@@ -388,8 +397,19 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content hs-modal">
         <div class="modal-header">
-          <h5 class="modal-title">Message</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          <div class="d-flex align-items-center w-100">
+            <h5 class="modal-title mb-0">Détails du message</h5>
+            <div class="ms-auto d-flex align-items-center">
+              <label for="contactStatusSelect" class="me-2 small fw-bold text-muted">Statut :</label>
+              <select id="contactStatusSelect" class="form-select form-select-sm" style="width: auto;">
+                <option value="Nouveau">Nouveau</option>
+                <option value="En cours">En cours</option>
+                <option value="Terminé">Terminé</option>
+                <option value="Annulé">Annulé</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Fermer"></button>
         </div>
         <div class="modal-body">
           <div class="hs-contact-details" id="contactDetails"></div>

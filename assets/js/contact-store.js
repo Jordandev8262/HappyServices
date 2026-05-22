@@ -44,6 +44,7 @@
           message: normalizeStr(fd.get("message")),
           event_type: normalizeStr(fd.get("event_type")),
           event_date: normalizeStr(fd.get("event_date")),
+          status: "Nouveau",
           page: window.location.pathname,
         };
 

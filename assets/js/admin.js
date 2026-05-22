@@ -15,6 +15,9 @@
 
   let remoteContacts = [];
   let isFetchingContacts = false;
+  let hasFetchedRemote = false;
+  let currentContactId = null; // New
+  let pollingInterval = null; // New
 
   const els = {
     loginView: document.getElementById("loginView"),
@@ -62,6 +65,10 @@
     articleCategory: document.getElementById("articleCategory"),
     articleDate: document.getElementById("articleDate"),
     articleImage: document.getElementById("articleImage"),
+    articleImageFile: document.getElementById("articleImageFile"),
+    imagePreviewContainer: document.getElementById("imagePreviewContainer"),
+    imagePreview: document.getElementById("imagePreview"),
+    removeImageBtn: document.getElementById("removeImageBtn"),
     articleExcerpt: document.getElementById("articleExcerpt"),
     articleContent: document.getElementById("articleContent"),
 
@@ -77,6 +84,7 @@
 
     contactModalEl: document.getElementById("contactModal"),
     contactDetails: document.getElementById("contactDetails"),
+    contactStatusSelect: document.getElementById("contactStatusSelect"),
   };
 
   function safeJsonParse(value, fallback) {
@@ -97,15 +105,15 @@
   }
 
   function getContacts() {
-    if (remoteContacts.length > 0) return remoteContacts;
+    if (hasFetchedRemote) return remoteContacts;
     const list = safeJsonParse(localStorage.getItem(CONTACTS_KEY), []);
     return Array.isArray(list) ? list : [];
   }
 
-  async function fetchContactsFromSheets() {
+  async function fetchContactsFromSheets(silent = false) {
     if (isFetchingContacts) return;
     isFetchingContacts = true;
-    if (els.syncContacts) {
+    if (!silent && els.syncContacts) {
       els.syncContacts.disabled = true;
       els.syncContacts.innerHTML = '<i class="bi bi-arrow-repeat hs-spin"></i> Chargement...';
     }
@@ -116,16 +124,34 @@
       const data = await resp.json();
       if (data.error) throw new Error(data.error);
       remoteContacts = Array.isArray(data) ? data : [];
+      hasFetchedRemote = true;
       renderContacts();
     } catch (err) {
       console.error("Fetch error:", err);
-      alert("Impossible de récupérer les contacts depuis Google Sheets. Vérifie ta connexion ou le déploiement du script.");
+      if (!silent) {
+        alert("Impossible de récupérer les contacts depuis Google Sheets. Vérifie ta connexion ou le déploiement du script.");
+      }
     } finally {
       isFetchingContacts = false;
-      if (els.syncContacts) {
+      if (!silent && els.syncContacts) {
         els.syncContacts.disabled = false;
         els.syncContacts.innerHTML = '<i class="bi bi-arrow-repeat"></i> Actualiser Sheets';
       }
+    }
+  }
+
+  function startPolling() {
+    if (pollingInterval) return;
+    // Polling toutes les 30 secondes pour le "temps réel"
+    pollingInterval = setInterval(() => {
+      fetchContactsFromSheets(true);
+    }, 30000);
+  }
+
+  function stopPolling() {
+    if (pollingInterval) {
+      clearInterval(pollingInterval);
+      pollingInterval = null;
     }
   }
 
@@ -150,6 +176,7 @@
       // Avec no-cors, on ne peut pas lire la réponse, mais on assume que c'est ok si pas d'erreur réseau
       localStorage.removeItem(CONTACTS_KEY);
       remoteContacts = [];
+      hasFetchedRemote = true;
       renderContacts();
       alert("La liste a été vidée (Local et Google Sheets).");
     } catch (err) {
@@ -254,6 +281,53 @@
     return `<span class="hs-pill ${s}"><i class="bi ${icon}"></i> ${label}</span>`;
   }
 
+  function buildContactStatusPill(status) {
+    const s = (status ?? "Nouveau").toLowerCase();
+    let cls = "published";
+    let icon = "bi-check-circle";
+
+    if (s === "nouveau") {
+      cls = "draft";
+      icon = "bi-star-fill";
+    } else if (s === "en cours") {
+      cls = "published";
+      icon = "bi-hourglass-split";
+    } else if (s === "terminé") {
+      cls = "published";
+      icon = "bi-check-all";
+    } else if (s === "annulé") {
+      cls = "draft";
+      icon = "bi-x-circle";
+    }
+
+    return `<span class="hs-pill ${cls}"><i class="bi ${icon}"></i> ${status ?? "Nouveau"}</span>`;
+  }
+
+  function updateImagePreview(src) {
+    if (src) {
+      els.imagePreview.src = src;
+      els.imagePreviewContainer.style.display = "flex";
+      els.imagePreviewContainer.style.alignItems = "center";
+      els.articleImage.value = src;
+    } else {
+      els.imagePreview.src = "";
+      els.imagePreviewContainer.style.display = "none";
+      els.articleImage.value = "";
+    }
+  }
+
+  function handleImageSelection(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64 = event.target.result;
+      updateImagePreview(base64);
+    };
+    reader.readAsDataURL(file);
+  }
+
   function openArticleModal(mode, article) {
     const modal = bootstrap.Modal.getOrCreateInstance(els.articleModalEl);
     els.articleModalTitle.textContent = mode === "edit" ? "Modifier l’article" : "Nouvel article";
@@ -263,7 +337,12 @@
     els.articleStatus.value = article?.status ?? "published";
     els.articleCategory.value = article?.category ?? "Organisation";
     els.articleDate.value = article?.date ?? nowDateInputValue();
-    els.articleImage.value = article?.image ?? "assets/img/portfolio/portfolio-1.jpg";
+    
+    const img = article?.image ?? "assets/img/portfolio/portfolio-1.jpg";
+    els.articleImage.value = img;
+    updateImagePreview(img);
+    els.articleImageFile.value = ""; // Reset file input
+
     els.articleExcerpt.value = article?.excerpt ?? "";
     els.articleContent.value = article?.content ?? "";
 
@@ -450,6 +529,7 @@
         const name = escapeHtml(c.name);
         const email = escapeHtml(c.email);
         const type = escapeHtml(c.event_type || "—");
+        const statusPill = buildContactStatusPill(c.status);
         const created = escapeHtml(fmtDate(c.createdAt));
         const subject = escapeHtml(c.subject || "—");
         return `
@@ -457,6 +537,7 @@
             <td><span class="hs-cell-title">${name}</span></td>
             <td><a href="mailto:${email}">${email}</a></td>
             <td>${type}</td>
+            <td>${statusPill}</td>
             <td>${created}</td>
             <td><span class="hs-cell-sub">${subject}</span></td>
             <td class="text-end">
@@ -475,6 +556,11 @@
     const c = list.find((x) => x.id === id);
     if (!c) return;
 
+    currentContactId = id;
+    if (els.contactStatusSelect) {
+      els.contactStatusSelect.value = c.status || "Nouveau";
+    }
+
     const html = `
       <div class="hs-contact-box">
         <div class="hs-contact-title">${escapeHtml(c.subject || "Message")}</div>
@@ -492,6 +578,36 @@
 
     els.contactDetails.innerHTML = html;
     bootstrap.Modal.getOrCreateInstance(els.contactModalEl).show();
+  }
+
+  async function updateContactStatus(id, newStatus) {
+    const list = getContacts();
+    const contact = list.find((c) => c.id === id);
+    if (!contact || !contact.rowIndex) return;
+
+    try {
+      const fd = new FormData();
+      fd.append("action", "updateStatus");
+      fd.append("rowIndex", contact.rowIndex);
+      fd.append("status", newStatus);
+
+      // We use fetch with POST. 
+      // Note: GAS might have CORS issues with "no-cors", but we'll try.
+      // Since we want to update the local state immediately for "real-time" feel:
+      contact.status = newStatus;
+      renderContacts();
+
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: fd,
+        mode: "no-cors",
+      });
+      
+      console.log("Status updated on Sheets");
+    } catch (err) {
+      console.error("Update status error:", err);
+      alert("Erreur lors de la mise à jour du statut sur Google Sheets.");
+    }
   }
 
   function downloadJson(filename, data) {
@@ -554,11 +670,13 @@
     setView("blog");
     renderBlog();
     renderContacts();
+    startPolling(); // New
     requestAnimationFrame(() => {
       els.dashboardMain?.focus({ preventScroll: true });
     });
   }
   function showLogin() {
+    stopPolling(); // New
     els.dashboardView.classList.add("d-none");
     els.loginView.classList.remove("d-none");
   }
@@ -598,6 +716,12 @@
     });
 
     els.newArticleBtn?.addEventListener("click", () => openArticleModal("new"));
+
+    els.articleImageFile?.addEventListener("change", handleImageSelection);
+    els.removeImageBtn?.addEventListener("click", () => {
+      els.articleImageFile.value = "";
+      updateImagePreview("");
+    });
 
     els.saveArticleBtn?.addEventListener("click", () => {
       if (!els.articleForm.reportValidity()) return;
@@ -645,9 +769,15 @@
       downloadJson(`happyservices-contacts-${new Date().toISOString().slice(0, 10)}.json`, data);
     });
 
-    els.syncContacts?.addEventListener("click", fetchContactsFromSheets);
+    els.syncContacts?.addEventListener("click", () => fetchContactsFromSheets());
 
     els.clearContacts?.addEventListener("click", clearContactsFromSheets);
+
+    els.contactStatusSelect?.addEventListener("change", (e) => {
+      if (currentContactId) {
+        updateContactStatus(currentContactId, e.target.value);
+      }
+    });
 
     // Boot
     if (isAuthed()) showDashboard();

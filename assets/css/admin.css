@@ -1102,5 +1102,22 @@
   }
 }
 
-@ k e y f r a m e s   h s - s p i n   {   f r o m   {   t r a n s f o r m :   r o t a t e ( 0 d e g ) ;   }   t o   {   t r a n s f o r m :   r o t a t e ( 3 6 0 d e g ) ;   }   }   . h s - s p i n   {   d i s p l a y :   i n l i n e - b l o c k ;   a n i m a t i o n :   h s - s p i n   1 s   l i n e a r   i n f i n i t e ;   }  
- 
+.hs-image-preview {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  border: 1px dashed #ccc;
+}
+
+.hs-image-preview img {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes hs-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.hs-spin {
+  display: inline-block;
+  animation: hs-spin 1s linear infinite;
+}

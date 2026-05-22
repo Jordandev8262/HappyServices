@@ -18,6 +18,16 @@ function doPost(e) {
       return ContentService.createTextOutput("CLEARED").setMimeType(ContentService.MimeType.TEXT);
     }
 
+    if (action === "updateStatus") {
+      var rowIndex = parseInt(e.parameter.rowIndex);
+      var newStatus = e.parameter.status;
+      if (rowIndex > 1 && newStatus) {
+        sheet.getRange(rowIndex, 8).setValue(newStatus); // Colonne 8 = Statut
+        return ContentService.createTextOutput("UPDATED").setMimeType(ContentService.MimeType.TEXT);
+      }
+      return ContentService.createTextOutput("INVALID_PARAMS").setMimeType(ContentService.MimeType.TEXT);
+    }
+
     // Récupération des données pour l'ajout (par défaut)
     var name = e.parameter.name || "Non spécifié";
     var email = e.parameter.email || "Non spécifié";
@@ -25,8 +35,9 @@ function doPost(e) {
     var event_date = e.parameter.event_date || "Non spécifié";
     var subject = e.parameter.subject || "Sans objet";
     var message = e.parameter.message || "Pas de message";
+    var status = "Nouveau"; // Statut par défaut pour les nouveaux contacts
     
-    // Ajout de la ligne
+    // Ajout de la ligne (8 colonnes maintenant)
     sheet.appendRow([
       new Date(), 
       name, 
@@ -34,7 +45,8 @@ function doPost(e) {
       event_type, 
       event_date, 
       subject, 
-      message
+      message,
+      status
     ]);
     
     // Envoi de l'alerte
@@ -68,13 +80,15 @@ function doGet() {
       if (!data[i][0]) continue; // Sauter les lignes vides
       results.push({
         id: "gs_" + i + "_" + new Date(data[i][0]).getTime(),
+        rowIndex: i + 1, // Pour pouvoir mettre à jour le statut plus tard
         createdAt: data[i][0],
         name: data[i][1],
         email: data[i][2],
         event_type: data[i][3],
         event_date: data[i][4],
         subject: data[i][5],
-        message: data[i][6]
+        message: data[i][6],
+        status: data[i][7] || "Nouveau" // Colonne 8
       });
     }
     
