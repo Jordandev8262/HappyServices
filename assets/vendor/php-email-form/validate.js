@@ -50,6 +50,22 @@
   });
 
   function php_email_form_submit(thisForm, action, formData) {
+    if (action.includes('script.google.com')) {
+      // Pour Google Script, on utilise une méthode plus robuste pour éviter les problèmes de Fetch/CORS
+      const xhttp = new XMLHttpRequest();
+      xhttp.open("POST", action, true);
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          thisForm.querySelector('.loading').classList.remove('d-block');
+          // Avec no-cors/GAS on ne peut pas lire le statut exact, on considère que c'est OK si on a envoyé
+          thisForm.querySelector('.sent-message').classList.add('d-block');
+          thisForm.reset();
+        }
+      };
+      xhttp.send(new URLSearchParams(formData));
+      return;
+    }
+
     fetch(action, {
       method: 'POST',
       body: formData,
