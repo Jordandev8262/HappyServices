@@ -65,6 +65,31 @@
   if (preloader) {
     window.addEventListener('load', () => {
       preloader.remove();
+      playWelcomeSound();
+    });
+  }
+
+  /**
+   * Welcome Sound
+   */
+  function playWelcomeSound() {
+    if (sessionStorage.getItem('welcomeSoundPlayed')) return;
+
+    const audio = new Audio('assets/audio/welcome.mp3');
+    audio.volume = 0.5;
+    audio.play().then(() => {
+      sessionStorage.setItem('welcomeSoundPlayed', 'true');
+    }).catch(error => {
+      // Autoplay is often blocked by browsers until a user interaction occurs
+      const playOnInteraction = () => {
+        audio.play().then(() => {
+          sessionStorage.setItem('welcomeSoundPlayed', 'true');
+        });
+        document.removeEventListener('click', playOnInteraction);
+        document.removeEventListener('touchstart', playOnInteraction);
+      };
+      document.addEventListener('click', playOnInteraction);
+      document.addEventListener('touchstart', playOnInteraction);
     });
   }
 
