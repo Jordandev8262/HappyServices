@@ -1476,21 +1476,122 @@ section,
 # Pricing Section
 --------------------------------------------------------------*/
 .pricing .pricing-item {
-  border-bottom: 1px dashed color-mix(in srgb, var(--default-color), transparent 60%);
-  width: 100%;
+  padding: 60px 40px;
+  box-shadow: 0 3px 20px 0 rgba(0, 0, 0, 0.1);
+  background: var(--surface-color);
   height: 100%;
-  padding: 0 0 15px 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
 }
 
 .pricing .pricing-item h3 {
+  font-weight: 700;
+  padding: 15px;
+  font-size: 18px;
+  text-transform: uppercase;
+  color: var(--default-color);
+  text-align: center;
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
 }
 
 .pricing .pricing-item h4 {
-  margin: 0;
+  font-size: 48px;
+  color: var(--accent-color);
+  font-weight: 700;
+  font-family: var(--heading-font);
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.pricing .pricing-item h4 sup {
+  font-size: 28px;
+}
+
+.pricing .pricing-item h4 span {
+  color: color-mix(in srgb, var(--default-color), transparent 50%);
   font-size: 18px;
+  font-weight: 400;
+}
+
+.pricing .pricing-item ul {
+  padding: 20px 0;
+  list-style: none;
+  color: var(--default-color);
+  text-align: left;
+  line-height: 20px;
+}
+
+.pricing .pricing-item ul li {
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+}
+
+.pricing .pricing-item ul i {
+  color: #059669;
+  font-size: 24px;
+  padding-right: 10px;
+  line-height: 0;
+}
+
+.pricing .pricing-item ul .na {
+  color: color-mix(in srgb, var(--default-color), transparent 60%);
+}
+
+.pricing .pricing-item ul .na i {
+  color: color-mix(in srgb, var(--default-color), transparent 60%);
+}
+
+.pricing .pricing-item ul .na span {
+  text-decoration: line-through;
+}
+
+.pricing .pricing-item .buy-btn {
+  background: var(--background-color);
+  display: inline-block;
+  padding: 8px 35px 10px 35px;
+  border-radius: 50px;
+  color: var(--accent-color);
+  transition: none;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--heading-font);
+  transition: 0.3s;
+  border: 1px solid var(--accent-color);
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+}
+
+.pricing .pricing-item .buy-btn:hover {
+  background: var(--accent-color);
+  color: var(--contrast-color);
+}
+
+.pricing .featured {
+  background: var(--accent-color);
+}
+
+.pricing .featured h3,
+.pricing .featured h4,
+.pricing .featured h4 span,
+.pricing .featured ul,
+.pricing .featured ul .na,
+.pricing .featured ul .na i {
+  color: var(--contrast-color);
+}
+
+.pricing .featured .buy-btn {
+  background: var(--accent-color);
+  color: var(--contrast-color);
+  border-color: var(--contrast-color);
+}
+
+.pricing .featured .buy-btn:hover {
+  background: var(--contrast-color);
   color: var(--accent-color);
 }
 
@@ -2030,6 +2131,36 @@ section,
 --------------------------------------------------------------*/
 .portfolio-details .portfolio-details-slider img {
   width: 100%;
+  border-radius: 12px;
+}
+
+@media (min-width: 1200px) {
+  .portfolio-details .portfolio-details-slider {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+.portfolio-details .video-box {
+  margin-top: 30px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  background: #000;
+}
+
+.portfolio-details .video-box video {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  display: block;
+  object-fit: cover;
+}
+
+.portfolio-details .tiktok-embed {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
 }
 
 .portfolio-details .swiper-wrapper {
