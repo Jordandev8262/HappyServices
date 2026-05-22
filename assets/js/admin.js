@@ -71,6 +71,7 @@
     kpiContacts7d: document.getElementById("kpiContacts7d"),
     contactSearch: document.getElementById("contactSearch"),
     contactsTbody: document.getElementById("contactsTbody"),
+    syncContacts: document.getElementById("syncContacts"),
     exportContacts: document.getElementById("exportContacts"),
     clearContacts: document.getElementById("clearContacts"),
 
@@ -96,8 +97,68 @@
   }
 
   function getContacts() {
+    if (remoteContacts.length > 0) return remoteContacts;
     const list = safeJsonParse(localStorage.getItem(CONTACTS_KEY), []);
     return Array.isArray(list) ? list : [];
+  }
+
+  async function fetchContactsFromSheets() {
+    if (isFetchingContacts) return;
+    isFetchingContacts = true;
+    if (els.syncContacts) {
+      els.syncContacts.disabled = true;
+      els.syncContacts.innerHTML = '<i class="bi bi-arrow-repeat hs-spin"></i> Chargement...';
+    }
+
+    try {
+      const resp = await fetch(SCRIPT_URL);
+      if (!resp.ok) throw new Error("Erreur réseau");
+      const data = await resp.json();
+      if (data.error) throw new Error(data.error);
+      remoteContacts = Array.isArray(data) ? data : [];
+      renderContacts();
+    } catch (err) {
+      console.error("Fetch error:", err);
+      alert("Impossible de récupérer les contacts depuis Google Sheets. Vérifie ta connexion ou le déploiement du script.");
+    } finally {
+      isFetchingContacts = false;
+      if (els.syncContacts) {
+        els.syncContacts.disabled = false;
+        els.syncContacts.innerHTML = '<i class="bi bi-arrow-repeat"></i> Actualiser Sheets';
+      }
+    }
+  }
+
+  async function clearContactsFromSheets() {
+    if (!confirm("Vider la liste des messages ? Cela supprimera aussi les données dans Google Sheets.")) return;
+
+    const originalBtnHtml = els.clearContacts.innerHTML;
+    els.clearContacts.disabled = true;
+    els.clearContacts.innerHTML = '<i class="bi bi-hourglass-split"></i> Nettoyage...';
+
+    try {
+      // Pour Google Apps Script, on utilise souvent FormData pour le POST
+      const fd = new FormData();
+      fd.append("action", "clear");
+
+      const resp = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: fd,
+        mode: "no-cors", // Mode nécessaire pour GAS sans redirection complexe
+      });
+
+      // Avec no-cors, on ne peut pas lire la réponse, mais on assume que c'est ok si pas d'erreur réseau
+      localStorage.removeItem(CONTACTS_KEY);
+      remoteContacts = [];
+      renderContacts();
+      alert("La liste a été vidée (Local et Google Sheets).");
+    } catch (err) {
+      console.error("Clear error:", err);
+      alert("Erreur lors de la suppression sur Google Sheets.");
+    } finally {
+      els.clearContacts.disabled = false;
+      els.clearContacts.innerHTML = originalBtnHtml;
+    }
   }
 
   function nowDateInputValue() {
@@ -164,6 +225,10 @@
     els.pageDesc.textContent = isBlog
       ? "Publie et pilote tes contenus : statut visible d’un coup d’œil, actions contextualisées sur chaque ligne."
       : "Centralise les demandes du formulaire : consulte rapidement le contexte, puis exporte pour archivage.";
+
+    if (!isBlog) {
+      fetchContactsFromSheets();
+    }
   }
 
   function fmtDate(iso) {
@@ -580,12 +645,9 @@
       downloadJson(`happyservices-contacts-${new Date().toISOString().slice(0, 10)}.json`, data);
     });
 
-    els.clearContacts?.addEventListener("click", () => {
-      const ok = confirm("Vider la liste des messages ? (stockage local)");
-      if (!ok) return;
-      localStorage.removeItem(CONTACTS_KEY);
-      renderContacts();
-    });
+    els.syncContacts?.addEventListener("click", fetchContactsFromSheets);
+
+    els.clearContacts?.addEventListener("click", clearContactsFromSheets);
 
     // Boot
     if (isAuthed()) showDashboard();

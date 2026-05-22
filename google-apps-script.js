@@ -1,14 +1,24 @@
 function doPost(e) {
   var lock = LockService.getScriptLock();
-  lock.tryLock(10000); // Évite les conflits si plusieurs personnes envoient en même temps
+  lock.tryLock(10000);
 
   try {
-    // Utilisation de l'ID direct du Sheet (plus robuste que l'URL)
     var id = "1xKd_6ofZ5N2YtiwghLAgJQSO35cidHa80LFsQBjWhzw";
     var ss = SpreadsheetApp.openById(id);
     var sheet = ss.getSheets()[0];
     
-    // Récupération des données
+    var action = e.parameter.action || "append";
+
+    if (action === "clear") {
+      // Garder l'en-tête (ligne 1) et supprimer le reste
+      var lastRow = sheet.getLastRow();
+      if (lastRow > 1) {
+        sheet.deleteRows(2, lastRow - 1);
+      }
+      return ContentService.createTextOutput("CLEARED").setMimeType(ContentService.MimeType.TEXT);
+    }
+
+    // Récupération des données pour l'ajout (par défaut)
     var name = e.parameter.name || "Non spécifié";
     var email = e.parameter.email || "Non spécifié";
     var event_type = e.parameter.event_type || "Non spécifié";
@@ -34,9 +44,7 @@ function doPost(e) {
         subject: "Nouveau contact : " + subject,
         body: "Vous avez reçu une nouvelle demande.\n\nNom: " + name + "\nEmail: " + email + "\nType: " + event_type + "\nDate: " + event_date + "\nObjet: " + subject + "\nMessage: " + message
       });
-    } catch (e) {
-      // Si l'email échoue, on continue quand même pour ne pas bloquer le Sheet
-    }
+    } catch (e) {}
     
     return ContentService.createTextOutput("OK").setMimeType(ContentService.MimeType.TEXT);
     
@@ -54,11 +62,10 @@ function doGet() {
     var sheet = ss.getSheets()[0];
     var data = sheet.getDataRange().getValues();
     
-    // On enlève l'en-tête si elle existe (ou on la gère)
-    // Ici on suppose que la première ligne peut être une en-tête ou des données
-    // Pour être sûr, on transforme en tableau d'objets
     var results = [];
+    // On commence à i=1 pour sauter l'en-tête
     for (var i = 1; i < data.length; i++) {
+      if (!data[i][0]) continue; // Sauter les lignes vides
       results.push({
         id: "gs_" + i + "_" + new Date(data[i][0]).getTime(),
         createdAt: data[i][0],
@@ -71,7 +78,6 @@ function doGet() {
       });
     }
     
-    // Inverser pour avoir les plus récents en premier
     results.reverse();
     
     return ContentService.createTextOutput(JSON.stringify(results))
